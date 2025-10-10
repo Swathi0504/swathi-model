@@ -14,7 +14,7 @@ const cartSlice = createSlice(
             },
             removeItems : (state,action) => {
                 state.items.pop(action.payload);
-                if(state.count!=0) {state.count=state.count-action.payload.price;}
+                if(state.count!==0) {state.count=state.count-action.payload.price;}
             } 
         }
     }

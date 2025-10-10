@@ -32,7 +32,7 @@ const Yourcart = () => {
             {
                 cartItems.map((item)=>{
                     return <>
-                       <img className="w-[50px] h-[50px] my-[20px]" src={item.image} />
+                       <img alt="" className="w-[50px] h-[50px] my-[20px]" src={item.image} />
                         <div className='mt-[10px]'>
                             <h1 className='font-semibold'>{item.title.split(" ").slice(0, 3).join(" ")}</h1>
                             <p className="font-semibold">${item.price}</p>

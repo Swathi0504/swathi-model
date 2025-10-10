@@ -19,7 +19,7 @@ const CardsList = ({index,product}) => {
 
   return (
     <div className='w-[250px] h-[350px] bg-white rounded-lg shadow-lg'>
-        <img className="w-[150px] h-[170px] mx-[50px] my-[20px]" src={product.image} />
+        <img className="w-[150px] h-[170px] mx-[50px] my-[20px]" alt="" src={product.image} />
         <div className='mx-[15px]'>
           <h1 className='font-semibold'>{product.title.split(" ").slice(0, 3).join(" ")}</h1>
           <p className="font-semibold">${product.price}</p>
