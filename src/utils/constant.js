@@ -1,0 +1,1 @@
+export const GET_PRODUCT_API = "https://fakestoreapi.com/products";
