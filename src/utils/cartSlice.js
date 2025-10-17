@@ -19,7 +19,7 @@ const cartSlice = createSlice(
                 } 
                 state.count=state.count-action.payload.price;
             } 
-        }
+        }  
     }
 );
 
