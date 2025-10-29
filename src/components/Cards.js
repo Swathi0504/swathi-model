@@ -4,41 +4,30 @@ import CardsList from './CardsList';
 import { useSelector } from "react-redux";
 
 const Cards = () => {
-  
-  const [productList,setProductlist] = useState([]);  
-
-  const show = useSelector((store)=>store.cart.isShow)
+  const [productList, setProductlist] = useState([]);  
+  const show = useSelector((store)=>store.cart.isShow);
   
   useEffect(()=>{
-      getProductlist();
+    getProductlist();
   },[]);
    
   const getProductlist = async () => {
     const data = await fetch(GET_PRODUCT_API);
     const json = await data.json();
     setProductlist(json);
-    console.log(json);
   }
    
-  if(productList?.length===0) return;
-
+  if(productList?.length === 0) return;
 
   return (
-    show?<div className='ml-[100px] mt-[100px] grid grid-cols-3 w-[1200px] gap-8'>
-       {
-        productList.map((product,index)=>{
-          return <CardsList key={index} product={product}/>
-        })
-       }
-    </div>:
-    <div className='ml-[100px] mt-[100px] grid grid-cols-4 w-[1200px] gap-8'>
-       {
-        productList.map((product,index)=>{
-          return <CardsList key={index} product={product}/>
-        })
-       }
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#f3f4f6]/80 to-[#c7d2fe]/70 backdrop-blur-lg py-16 px-20">
+      <div className={`${show ? 'grid-cols-3' : 'grid-cols-4'} grid gap-8 place-items-center`}>
+        {productList.map((product, index) => (
+          <CardsList key={index} product={product}/>
+        ))}
+      </div>
     </div>
   )
 }
 
-export default Cards
+export default Cards;
