@@ -3,23 +3,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from 'react-redux';
 import { showItems } from '../utils/cartSlice';
+import { Link } from 'react-router-dom';
 const Navigation = () => {
     
   const cartItems = useSelector((store)=>store.cart.items); 
   const dispatch = useDispatch()
 
 
-  const handleshow = ()=>{
-     dispatch(showItems());
-  }
-
   return (
     <nav className="fixed top-0 left-0 w-full bg-gradient-to-r from-indigo-600/80 via-purple-600/70 to-pink-500/70 backdrop-blur-lg shadow-lg py-4 px-10 flex justify-between items-center z-50 border-b border-white/20">
-      <h1 className="text-3xl font-extrabold text-white tracking-wide drop-shadow-md">
+      
+      <Link to="/">
+        <h1 className="text-3xl font-extrabold text-white tracking-wide drop-shadow-md">
         Fake Store
-      </h1>
-
-      <div className="relative cursor-pointer" onClick={handleshow}>
+        </h1>
+      </Link>
+      
+      <Link to="/yourcart">
+      <div className="relative cursor-pointer">
         <FontAwesomeIcon
           icon={faCartShopping}
           className="text-2xl text-white hover:text-yellow-300 transition-all duration-200"
@@ -30,6 +31,7 @@ const Navigation = () => {
           </span>
         )}
       </div>
+      </Link>
     </nav>
   )
 }
