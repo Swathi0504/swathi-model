@@ -1,73 +1,144 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeItems } from "../utils/cartSlice";
+import {
+  addItems,
+  removeItems,
+  removeQuantity,
+  updateQuantity,
+} from "../utils/cartSlice";
 
 const Yourcart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((store) => store.cart.items);
-  const totalprice = useSelector((store) => store.cart.count);
+  const cartquantity = useSelector((store) => store.cart.quantity);
 
-  const handleremoveitems = (e) => {
-    dispatch(removeItems(e));
+  const handleremoveitems = (item) => {
+    dispatch(removeItems(item));
+    dispatch(removeQuantity(item));
   };
+
+  const handleQuantityChange = (item, no) => {
+    const id = item.id;
+    const total = cartquantity[id].no + no;
+    if (total >= 1) {
+      dispatch(updateQuantity({ item: item, no: total }));
+    }
+  };
+
+  const totalPrice = cartItems.reduce(
+    (sum, item) => sum + item.price * cartquantity[item.id].no,
+    0
+  );
+
+  const discount = totalPrice * 0.1;
+  const finalPrice = totalPrice - discount;
 
   if (cartItems.length === 0) {
     return (
-      <div className="flex flex-col justify-center items-center h-full text-center text-gray-700 bg-gradient-to-br from-indigo-50/60 via-purple-50/50 to-pink-50/60 backdrop-blur-md rounded-xl shadow-lg p-6">
-        <h1 className="font-bold text-[22px] mb-3 text-gray-800">
-          No cart items to show 😔
-        </h1>
-        <p className="text-sm text-gray-600">Add something to your cart!</p>
-      </div>
-    );
-  } else {
-    return (
-      <div className="mt-[15px] ml-[15px] max-h-[500px] bg-gradient-to-br from-indigo-50/70 via-purple-50/60 to-pink-50/70 backdrop-blur-md rounded-xl shadow-lg px-4 py-4 flex flex-col w-[350px] border border-indigo-100">
-        <div className="border-b border-gray-300 pb-3 mb-4 flex justify-between items-center">
-          <h1 className="font-bold text-[22px] text-indigo-700 drop-shadow-sm">
-            Your Cart
+      <div className="fixed inset-0 flex flex-col justify-center items-center text-center text-gray-700 bg-gradient-to-br from-blue-50 via-indigo-100 to-blue-200">
+        <div className="bg-white/80 backdrop-blur-md px-10 py-12 rounded-2xl shadow-2xl border border-blue-200">
+          <h1 className="font-bold text-3xl mb-3 text-blue-800">
+            No cart items to show 😔
           </h1>
-          <span className="text-sm text-gray-500">
-            {cartItems.length} item{cartItems.length > 1 && "s"}
-          </span>
-        </div>
-        <div className="flex-1 overflow-y-auto space-y-4 pr-2">
-          {cartItems.map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center justify-between bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100"
-            >
-              <div className="flex items-center space-x-3">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-12 h-12 object-contain rounded-md"
-                />
-                <div>
-                  <h2 className="font-semibold text-sm text-gray-800">
-                    {item.title.split(" ").slice(0, 4).join(" ")}
-                  </h2>
-                  <p className="text-gray-600 text-sm">${item.price}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => handleremoveitems(item)}
-                className="bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white text-xs px-3 py-1.5 rounded-md shadow-md transition-all duration-300"
-              >
-                Remove
-              </button>
-            </div>
-          ))}
-        </div>
-        <div className="border-t border-gray-300 pt-3 mt-4">
-          <div className="flex justify-between text-[18px] font-semibold text-indigo-700">
-            <span>Total</span>
-            <span>${totalprice.toFixed(2)}</span>
-          </div>
+          <p className="text-base text-gray-600">
+            Add something to your cart!
+          </p>
         </div>
       </div>
     );
   }
+
+  return (
+    <div className="fixed mt-[50px] inset-0 flex flex-col items-center overflow-auto bg-gradient-to-br from-blue-50 via-indigo-100 to-blue-200 p-6">
+      <div className="w-full max-w-4xl bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl border border-blue-200 p-8 mt-6">
+       
+        <div className="flex justify-between items-center border-b border-blue-100 pb-4 mb-6">
+          <h1 className="font-bold text-3xl text-blue-700 drop-shadow-sm">
+            🛒 Your Cart
+          </h1>
+          <span className="text-blue-600 text-sm font-medium bg-blue-50 px-3 py-1 rounded-full shadow-sm">
+            {cartItems.length} items
+          </span>
+        </div>
+
+        <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-2">
+          {cartItems.map((item) => (
+            <div
+              key={item.id}
+              className="flex items-center justify-between bg-gradient-to-r from-white to-blue-50 rounded-lg p-4 shadow-md border border-blue-100 hover:shadow-lg hover:scale-[1.01] transition-all duration-300"
+            >
+              
+              <div className="flex items-center space-x-4">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-14 h-14 object-contain rounded-md border border-blue-100 shadow-sm"
+                />
+                <div>
+                  <h2 className="font-semibold text-gray-800 text-sm leading-snug">
+                    {item.title.split(" ").slice(0, 5).join(" ")}
+                  </h2>
+                  <p className="text-blue-600 font-medium text-xs mt-1">
+                    ${item.price.toFixed(2)} each
+                  </p>
+                </div>
+              </div>
+
+              
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => handleQuantityChange(item, -1)}
+                  className="px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-md font-bold text-sm transition-all"
+                >
+                  −
+                </button>
+                <span className="font-semibold text-sm text-gray-700">
+                  {cartquantity[item.id].no}
+                </span>
+                <button
+                  onClick={() => handleQuantityChange(item, +1)}
+                  className="px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-md font-bold text-sm transition-all"
+                >
+                  +
+                </button>
+              </div>
+
+             
+              <div className="text-right w-28">
+                <p className="text-blue-700 font-semibold text-sm">
+                  ${(item.price * cartquantity[item.id].no).toFixed(2)}
+                </p>
+                <button
+                  onClick={() => handleremoveitems(item)}
+                  className="text-xs text-red-500 hover:underline mt-1"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="border-t border-blue-200 pt-6 mt-6 space-y-2 text-right">
+          <p className="text-gray-700 text-sm">
+            Subtotal:{" "}
+            <span className="font-semibold text-blue-700">
+              ${totalPrice.toFixed(2)}
+            </span>
+          </p>
+          <p className="text-gray-700 text-sm">
+            Discount (10%):{" "}
+            <span className="font-semibold text-blue-700">
+              -${discount.toFixed(2)}
+            </span>
+          </p>
+          <p className="text-2xl font-bold text-blue-800 mt-2 drop-shadow-sm">
+            Final Total: ${finalPrice.toFixed(2)}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Yourcart;
